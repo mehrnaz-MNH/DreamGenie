@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./career-assistant-backend
+    container_name: career-assistant-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - AI_SERVICE_URL=http://career-assistant-ai:8000
+    depends_on:
+      - ai_service
+    volumes:
+      - ./career-assistant-backend:/usr/src/app
+
+  ai_service:
+    build:
+      context: ./career-assistant-ai
+    container_name: career-assistant-ai
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./career-assistant-ai:/app
+
+  # Optional: MongoDB service for persistent storage
+  mongo:
+    image: mongo:latest
+    container_name: career-assistant-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+    driver: local

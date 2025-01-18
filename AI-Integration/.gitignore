@@ -1,0 +1,42 @@
+# Python virtual environment
+venv/
+
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables file
+.env
+
+# VS Code settings
+.vscode/
+
+# Pytest cache
+.cache/
+
+# Dependency directories
+Pipfile.lock
+*.egg-info/
+
+# Distribution / packaging
+build/
+dist/
+*.egg
+
+# MySQL, SQLite, and other databases
+*.sqlite3
+
+# IDE-specific files
+.idea/
+
+# Docker
+docker-compose.override.yml
+Dockerfile
+
+# Python wheels
+*.whl
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
