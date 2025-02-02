@@ -10,8 +10,17 @@ DB_URL = 'sqlite:///./dreamGenie.db'
 
 engine = create_engine(DB_URL, connect_args={"check_same_thread" : False})
 
-sessionLocal = sessionmaker(autocommit=False , autoflush=False , bind=engine)
+SessionLocal = sessionmaker(autocommit=False , autoflush=False , bind=engine)
 
 Base = declarative_base()
+
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 

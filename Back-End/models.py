@@ -7,7 +7,8 @@ class User(Base):
     __tablename__ = "users"
     user_name = Column(String , primary_key=True , nullable=False , unique=True , index=True)
     email = Column(String , nullable=False , unique=True , index=True  )
-    password = Column(String , nullable=False , index=True  )
+    hashed_password = Column(String , nullable=False , index=True  )
+
 
     resume = relationship("Resume", back_populates="user")
     session = relationship("Session", back_populates="user")
