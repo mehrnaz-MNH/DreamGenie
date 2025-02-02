@@ -1,7 +1,7 @@
 from fastapi import FastAPI , Depends , HTTPException , status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from databse import engine , get_db
+from database import engine , get_db
 import models , schemas , utils
 
 # running the db migrations
@@ -13,9 +13,9 @@ app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # register route
-@app.post("/register" , response_model=schemas.User)
+@app.post("/register" , response_model=schemas.User , status_code=status.HTTP_201_CREATED)
 def register_user(user: schemas.UserCreate , db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.user_name == user.user_name)
+    db_user = db.query(models.User).filter(models.User.user_name == user.user_name).first()
     if db_user :
         raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="User already exist")
 
