@@ -10,13 +10,21 @@ class User(BaseModel):
     class Config:
         orm_mode = True
 
+class UserCreate(BaseModel):
+    user_name : str
+    email : EmailStr
+    password : str
+
+    class Config:
+        orm_mode = True
+
 
 class Token(BaseModel):
     access_token : str
     token_type : str
 
 class Resume(BaseModel):
-    resume_id = int
+    resume_id : int
     user_name:str
     file_path:str
     uploaded_at: datetime.datetime

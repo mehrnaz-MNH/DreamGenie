@@ -27,6 +27,7 @@ dist/
 
 # MySQL, SQLite, and other databases
 *.sqlite3
+*.db
 
 # IDE-specific files
 .idea/

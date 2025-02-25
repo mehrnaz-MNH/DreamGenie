@@ -7,17 +7,40 @@ import models , schemas , utils
 import os
 from uuid import uuid4
 
+
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
+
 # running the db migrations
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",  # Your frontend URL
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # OAuth2 for token base auth
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # upload folder setup
 UPLOAD_FOLDER = "../uploads/"
 os.makedirs(UPLOAD_FOLDER,exist_ok=True)
+
+
+
+@app.get("/" )
+def main():
+    return {"hello world"}
 
 # register route
 @app.post("/register" , response_model=schemas.User , status_code=status.HTTP_201_CREATED)
@@ -26,12 +49,16 @@ def register_user(user: schemas.UserCreate , db: Session = Depends(get_db)):
     if db_user :
         raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="User already exist")
 
+    existing_email = db.query(models.User).filter(models.User.email == user.email).first()
+    if existing_email:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
     hashed_pass = utils.hash_password(user.password)
     new_user = models.User(user_name = user.user_name , email = user.email , hashed_password = hashed_pass)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return {user : new_user}
+    return new_user
 
 
 # login route
